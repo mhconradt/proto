@@ -38,6 +38,7 @@ type UserORM struct {
 	IsOnline    int32
 	LastActive  *time.Time
 	Status      int32
+	Uid         string
 	UpdatedTime *time.Time `gorm:"type:timestamp"`
 	Username    string
 }
@@ -84,6 +85,7 @@ func (m *User) ToORM(ctx context.Context) (UserORM, error) {
 	to.ImageUrl = m.ImageUrl
 	to.IsOnline = m.IsOnline
 	to.Status = m.Status
+	to.Uid = m.Uid
 	if posthook, ok := interface{}(m).(UserWithAfterToORM); ok {
 		err = posthook.AfterToORM(ctx, &to)
 	}
@@ -121,6 +123,7 @@ func (m *UserORM) ToPB(ctx context.Context) (User, error) {
 	to.ImageUrl = m.ImageUrl
 	to.IsOnline = m.IsOnline
 	to.Status = m.Status
+	to.Uid = m.Uid
 	if posthook, ok := interface{}(m).(UserWithAfterToPB); ok {
 		err = posthook.AfterToPB(ctx, &to)
 	}
@@ -465,6 +468,10 @@ func DefaultApplyFieldMaskUser(ctx context.Context, patchee *User, patcher *User
 		}
 		if f == prefix+"Status" {
 			patchee.Status = patcher.Status
+			continue
+		}
+		if f == prefix+"Uid" {
+			patchee.Uid = patcher.Uid
 			continue
 		}
 	}

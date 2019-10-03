@@ -33,4 +33,5 @@ message User {
     // 1 if the account is active.
     // 0 if the account has been deactivated by the user.
     int32 status = 9;
+    string uid = 10;
 }
